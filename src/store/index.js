@@ -10,6 +10,21 @@ export default new Vuex.Store({
     collapsed: false,
     // 用户信息对象
     userInfo: getUserCookie(),
+    // 存储右侧菜单对应的menuRoutes
+    menuRoutes: [],
+  },
+  getters: {
+    filterMenuRoutes(state) {
+      return state.menuRoutes.filter((route) => {
+        const routeClone = route;
+        if (route.meta.show) {
+          const newChild = route.children.filter((child) => child.meta.show);
+          routeClone.children = newChild;
+          return true;
+        }
+        return false;
+      });
+    },
   },
   mutations: {
     changeCollapsed(state) {
@@ -26,6 +41,9 @@ export default new Vuex.Store({
         role: '',
       };
     },
+    setMenuRoutes(state, menuRoutes) {
+      state.menuRoutes = menuRoutes;
+    },
   },
   actions: {
     changeCollapsed({ commit }) {
@@ -38,6 +56,9 @@ export default new Vuex.Store({
     logout({ commit }) {
       commit('logout');
       removeUserCookie();
+    },
+    setMenuRoutes({ commit }, menuRoutes) {
+      commit('setMenuRoutes', menuRoutes);
     },
   },
   modules: {

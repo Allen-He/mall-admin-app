@@ -1,5 +1,5 @@
 <template>
-    <div :class="['RightHeader', { 'RightHeader-collapsed': $store.state.collapsed }]">
+    <div class="RightHeader">
       <div class="btn">
         <a-button
           type="primary"
@@ -10,8 +10,8 @@
       </div>
       <div class="bread-crumb">
         <a-breadcrumb>
-          <a-breadcrumb-item>商品</a-breadcrumb-item>
-          <a-breadcrumb-item><a href="">商品列表</a></a-breadcrumb-item>
+          <a-breadcrumb-item>{{ $route.matched[0].meta.title }}</a-breadcrumb-item>
+          <a-breadcrumb-item><a href="#">{{ $route.matched[1].meta.title }}</a></a-breadcrumb-item>
         </a-breadcrumb>
       </div>
       <ul class="userInfo">
