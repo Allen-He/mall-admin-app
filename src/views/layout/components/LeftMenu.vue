@@ -2,44 +2,68 @@
   <div class="leftMenu">
     <a-menu
       class="menu-list"
-      :default-selected-keys="['1']"
-      :default-open-keys="['sub1']"
+      :default-selected-keys="[$route.matched[1].name]"
+      :default-open-keys="[$route.matched[0].name]"
       mode="inline"
       theme="dark"
       :inline-collapsed="$store.state.collapsed"
     >
-      <a-menu-item key="1">
-        <a-icon type="pie-chart" />
-        <span>Option 1</span>
-      </a-menu-item>
-      <a-menu-item key="2">
-        <a-icon type="desktop" />
-        <span>Option 2</span>
-      </a-menu-item>
-      <a-menu-item key="3">
-        <a-icon type="inbox" />
-        <span>Option 3</span>
-      </a-menu-item>
-      <a-sub-menu key="sub1">
-        <span slot="title"
-          ><a-icon type="mail" /><span>Navigation One</span></span
-        >
-        <a-menu-item key="5"> Option 5 </a-menu-item>
-        <a-menu-item key="6"> Option 6 </a-menu-item>
-        <a-menu-item key="7"> Option 7 </a-menu-item>
-        <a-menu-item key="8"> Option 8 </a-menu-item>
-      </a-sub-menu>
-      <a-sub-menu key="sub2">
-        <span slot="title"
-          ><a-icon type="appstore" /><span>Navigation Two</span></span
-        >
-        <a-menu-item key="9"> Option 9 </a-menu-item>
-        <a-menu-item key="10"> Option 10 </a-menu-item>
-        <a-sub-menu key="sub3" title="Submenu">
-          <a-menu-item key="11"> Option 11 </a-menu-item>
-          <a-menu-item key="12"> Option 12 </a-menu-item>
+      <!-- 使用 v-if v-for 过滤掉不需要显示的route -->
+      <!-- <template v-for="route in $store.state.menuRoutes">
+        <a-sub-menu :key="route.name" v-if="route.meta.show">
+          <span slot="title">
+            <a-icon :type="route.meta.icon" />
+            <span>{{ route.meta.title }}</span>
+          </span>
+          <template v-for="routeChild in route.children">
+            <a-menu-item
+              :key="routeChild.name"
+              v-if="routeChild.meta.show"
+            >
+              <router-link :to="{ name: routeChild.name }">
+                <a-icon :type="routeChild.meta.icon" />
+                {{ routeChild.meta.title }}
+              </router-link>
+            </a-menu-item>
+          </template>
         </a-sub-menu>
+      </template> -->
+
+      <!-- 使用 vuex的计算属性getters 过滤掉不需要显示的route -->
+      <a-sub-menu
+        v-for="route in $store.getters.filterMenuRoutes"
+        :key="route.name"
+      >
+        <span slot="title">
+          <a-icon :type="route.meta.icon" />
+          <span>{{ route.meta.title }}</span>
+        </span>
+        <a-menu-item
+          v-for="routeChild in route.children"
+          :key="routeChild.name"
+        >
+          <router-link :to="{ name: routeChild.name }">
+            <a-icon :type="routeChild.meta.icon" />
+            {{ routeChild.meta.title }}
+          </router-link>
+        </a-menu-item>
       </a-sub-menu>
     </a-menu>
   </div>
 </template>
+
+<script>
+export default {
+  // created() {
+  //   // console.log(this.$store.state.menuRoutes);
+  //   // console.log(this.$store.getters.filterMenuRoutes);
+  //   // console.log(this.$route.name);
+  //   // console.log(this.$route.matched);
+  // },
+  // watch: {
+  //   '$route.matched': function () {
+  //     console.log(this.$route.matched);
+  //   },
+  // },
+};
+</script>

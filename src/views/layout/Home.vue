@@ -1,8 +1,9 @@
 <template>
   <div class="home">
     <LeftMenu />
-    <div class="content">
+    <div :class="['content', { 'content-collapsed': $store.state.collapsed }]">
       <RightHeader />
+      <router-view></router-view>
     </div>
   </div>
 </template>
