@@ -2,8 +2,8 @@
   <div class="leftMenu">
     <a-menu
       class="menu-list"
-      :default-selected-keys="[$route.matched[1].name]"
-      :default-open-keys="[$route.matched[0].name]"
+      :default-selected-keys="[defaultSelectedKey]"
+      :default-open-keys="[defaultOpenKey]"
       mode="inline"
       theme="dark"
       :inline-collapsed="$store.state.collapsed"
@@ -54,6 +54,16 @@
 
 <script>
 export default {
+  computed: {
+    defaultSelectedKey() {
+      return this.$router.currentRoute.matched[1]
+        ? this.$router.currentRoute.matched[1].name
+        : '';
+    },
+    defaultOpenKey() {
+      return this.$route.matched[0].name;
+    },
+  },
   // created() {
   //   // console.log(this.$store.state.menuRoutes);
   //   // console.log(this.$store.getters.filterMenuRoutes);

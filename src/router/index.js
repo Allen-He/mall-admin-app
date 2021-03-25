@@ -10,6 +10,7 @@ Vue.use(VueRouter);
 const asyncRoutes = [
   {
     path: '/products',
+    redirect: '/products/list',
     name: 'Products',
     component: Home,
     meta: {
@@ -46,6 +47,16 @@ const asyncRoutes = [
           title: '商品类目',
           show: true,
           icon: 'file-text',
+        },
+      },
+      {
+        path: 'edit/:id',
+        name: 'ProductEdit',
+        component: () => import('@/views/pages/ProductsAdd.vue'),
+        meta: {
+          title: '编辑商品',
+          show: false,
+          icon: 'edit',
         },
       },
     ],

@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <LeftMenu />
+    <LeftMenu :key="menuKey" />
     <div :class="['content', { 'content-collapsed': $store.state.collapsed }]">
       <RightHeader />
       <router-view></router-view>
@@ -16,6 +16,16 @@ export default {
   components: {
     LeftMenu,
     RightHeader,
+  },
+  data() {
+    return {
+      menuKey: new Date().getTime(),
+    };
+  },
+  watch: {
+    $route() {
+      this.menuKey = new Date().getTime();
+    },
   },
 };
 </script>
