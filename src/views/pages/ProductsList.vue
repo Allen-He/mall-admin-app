@@ -57,7 +57,9 @@ export default {
         this.pageConfig.total = res.total; // 配置总数据条数
         this.tableDate = res.data.map((item) => ({
           ...item,
-          categoryName: this.categoryList[item.category - 1].name,
+          categoryName: this.categoryList[item.category - 1]
+            ? this.categoryList[item.category - 1].name
+            : '',
         }));
       });
     },
