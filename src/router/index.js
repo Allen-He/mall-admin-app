@@ -7,95 +7,107 @@ import Login from '../views/layout/Login.vue';
 
 Vue.use(VueRouter);
 
-const asyncRoutes = [
-  {
-    path: '/products',
-    redirect: '/products/list',
-    name: 'Products',
-    component: Home,
-    meta: {
-      title: '商品',
-      show: true,
-      icon: 'appstore',
-    },
-    children: [
-      {
-        path: 'list',
-        name: 'ProductsList',
-        component: () => import('@/views/pages/ProductsList.vue'),
-        meta: {
-          title: '商品列表',
-          show: true,
-          icon: 'menu',
-        },
-      },
-      {
-        path: 'add',
-        name: 'ProductsAdd',
-        component: () => import('@/views/pages/ProductsAdd.vue'),
-        meta: {
-          title: '添加商品',
-          show: true,
-          icon: 'plus',
-        },
-      },
-      {
-        path: 'category',
-        name: 'Category',
-        component: () => import('@/views/pages/Category.vue'),
-        meta: {
-          title: '商品类目',
-          show: true,
-          icon: 'file-text',
-        },
-      },
-      {
-        path: 'edit/:id',
-        name: 'ProductEdit',
-        component: () => import('@/views/pages/ProductsAdd.vue'),
-        meta: {
-          title: '编辑商品',
-          show: false,
-          icon: 'edit',
-        },
-      },
-    ],
+const asyncRoutes = [{
+  path: '/products',
+  redirect: '/products/list',
+  name: 'Products',
+  component: Home,
+  meta: {
+    title: '商品',
+    show: true,
+    icon: 'appstore',
   },
-];
-
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home,
-    redirect: '/index',
+  children: [{
+    path: 'list',
+    name: 'ProductsList',
+    component: () => import('@/views/pages/ProductsList.vue'),
     meta: {
-      title: '首页',
+      title: '商品列表',
       show: true,
-      icon: 'home',
+      icon: 'menu',
     },
-    children: [
-      {
-        path: 'index',
-        name: 'Index',
-        component: () => import('@/views/pages/Index.vue'),
-        meta: {
-          title: '统计',
-          show: true,
-          icon: 'line-chart',
-        },
-      },
-    ],
   },
   {
-    path: '/login',
-    name: 'Login',
-    component: Login,
+    path: 'add',
+    name: 'ProductsAdd',
+    component: () => import('@/views/pages/ProductsAdd.vue'),
     meta: {
-      title: '登录',
+      title: '添加商品',
+      show: true,
+      icon: 'plus',
+    },
+  },
+  {
+    path: 'category',
+    name: 'Category',
+    component: () => import('@/views/pages/Category.vue'),
+    meta: {
+      title: '商品类目',
+      show: true,
+      icon: 'file-text',
+    },
+  },
+  {
+    path: 'edit/:id',
+    name: 'ProductEdit',
+    component: () => import('@/views/pages/ProductsAdd.vue'),
+    meta: {
+      title: '编辑商品',
       show: false,
+      icon: 'edit',
     },
   },
+  ],
+}];
+
+const routes = [{
+  path: '/',
+  name: 'Home',
+  component: Home,
+  redirect: '/index',
+  meta: {
+    title: '首页',
+    show: true,
+    icon: 'home',
+  },
+  children: [{
+    path: 'index',
+    name: 'Index',
+    component: () => import('@/views/pages/Index.vue'),
+    meta: {
+      title: '统计',
+      show: true,
+      icon: 'line-chart',
+    },
+  }],
+},
+{
+  path: '/login',
+  name: 'Login',
+  component: Login,
+  meta: {
+    title: '登录',
+    show: false,
+  },
+},
+{
+  path: '/register',
+  name: 'Register',
+  component: () => import('@/views/layout/Register.vue'),
+  meta: {
+    title: '注册',
+    show: false,
+  },
+},
+{
+  path: '/findback',
+  name: 'Findback',
+  component: () => import('@/views/layout/Findback.vue'),
+  meta: {
+    title: '找回密码',
+    show: false,
+  },
+},
 ];
 
 const router = new VueRouter({
@@ -106,9 +118,12 @@ const router = new VueRouter({
 
 let isAddedRoute = false; // 判断是否已添加了一次路由（锁）
 router.beforeEach((to, from, next) => {
-  if (to.path !== '/login') {
+  if (to.path !== '/login' && to.path !== '/register' && to.path !== '/findback') {
     const {
-      appkey, username, email, role,
+      appkey,
+      username,
+      email,
+      role,
     } = store.state.userInfo;
     if (appkey && username && email && role) {
       if (!isAddedRoute) {
@@ -122,7 +137,9 @@ router.beforeEach((to, from, next) => {
       }
       return next();
     }
-    return next({ name: 'Login' });
+    return next({
+      name: 'Login',
+    });
   }
   return next();
 });

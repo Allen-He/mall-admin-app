@@ -1,14 +1,14 @@
 <template>
-  <div class="login">
+  <div class="findback">
     <a-form-model
-      ref="loginForm"
-      :model="loginForm"
+      ref="findbackForm"
+      :model="findbackForm"
       :rules="rules"
       id="components-form-demo-normal-login"
       class="login-form"
     >
       <a-form-model-item has-feedback prop="email">
-        <a-input v-model="loginForm.email" placeholder="Email">
+        <a-input v-model="findbackForm.email" placeholder="Eamil">
           <a-icon
             slot="prefix"
             type="mail"
@@ -18,9 +18,9 @@
       </a-form-model-item>
       <a-form-model-item has-feedback prop="password">
         <a-input-password
-          v-model="loginForm.password"
+          v-model="findbackForm.password"
           autocomplete="off"
-          placeholder="Password"
+          placeholder="New Password"
         >
           <a-icon
             slot="prefix"
@@ -30,17 +30,26 @@
         </a-input-password>
       </a-form-model-item>
 
+      <a-form-model-item prop="code">
+        <a-row :gutter="10">
+          <a-col :span="17">
+            <a-input v-model="findbackForm.code" placeholder="请输入验证码" />
+          </a-col>
+          <a-col :span="6">
+            <a-button @click="getCodeHandle('findbackForm')"
+              >获取验证码</a-button
+            >
+          </a-col>
+        </a-row>
+      </a-form-model-item>
+
       <a-form-model-item>
-        <a-checkbox style="float: left"> 记住密码 </a-checkbox>
-        <router-link style="float: right" :to="{ name: 'Findback' }">
-          忘记密码
-        </router-link>
         <a-button
           type="primary"
-          @click="submitForm('loginForm')"
+          @click="submitForm('findbackForm')"
           class="login-form-button"
         >
-          登录
+          找回（重设）密码
         </a-button>
         Or
         <router-link :to="{ name: 'Register' }"> register now! </router-link>
@@ -74,13 +83,25 @@ export default {
       return callback();
     };
     return {
-      loginForm: {
+      findbackForm: {
         email: '',
         password: '',
+        code: '',
       },
       rules: {
         email: [{ validator: checkEmail, trigger: 'change' }],
         password: [{ validator: validatePass, trigger: 'change' }],
+        code: [{ required: true, message: '验证码不能为空' }],
+      },
+      formItemLayout: {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 3 },
+        },
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 16 },
+        },
       },
     };
   },
@@ -89,15 +110,12 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           api
-            .login(this.loginForm)
-            .then((res) => {
-              // console.log(res);
-              this.$store.dispatch('setUserInfo', res);
-              this.$router
-                .push({
-                  name: 'Home',
-                })
-                .catch((err) => new Error(err));
+            .findBack(this.findbackForm)
+            .then(() => {
+              this.$message.success('密码找回成功！请使用新修改的密码登录吧！');
+              this.$router.push({
+                name: 'Login',
+              });
             })
             .catch((error) => {
               this.$message.error(error);
@@ -108,11 +126,20 @@ export default {
         return false;
       });
     },
+    getCodeHandle(formName) {
+      this.$refs[formName].validateField('email', (valid) => {
+        if (!valid) {
+          api.getCode({ email: this.findbackForm.email });
+          return true;
+        }
+        return false;
+      });
+    },
   },
 };
 </script>
 <style>
-@import url("~@/assets/css/login.less");
+@import url("~@/assets/css/findback.less");
 #components-form-demo-normal-login .login-form {
   max-width: 300px;
 }
