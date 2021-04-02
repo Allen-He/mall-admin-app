@@ -1,9 +1,10 @@
 <template>
-  <ve-line :data="chartData" :settings="chartSettings"></ve-line>
+  <div class="chart-wrap">
+    <ve-line :data="chartData" :settings="chartSettings"></ve-line>
+  </div>
 </template>
 
 <script>
-
 export default {
   data() {
     this.chartSettings = {
@@ -38,3 +39,9 @@ export default {
   },
 };
 </script>
+
+<style lang="less" scoped>
+.chart-wrap {
+  padding: 20px;
+}
+</style>
